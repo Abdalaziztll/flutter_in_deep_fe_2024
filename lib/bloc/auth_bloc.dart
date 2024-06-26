@@ -12,7 +12,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitial()) {
     on<SignUp>((event, emit) async {
       log(event.user.toMap().toString());
-      dynamic status = await MockAuthService().signUp(event.user);
+      var status = await MockAuthService().signUp(event.user);
       if (status) {
         emit(SuccessInSignUp());
       } else {
