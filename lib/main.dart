@@ -1,18 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intro_to_bloc/bloc/cat_api_bloc.dart';
-import 'package:intro_to_bloc/config/observ_bloc.dart';
-import 'package:intro_to_bloc/counter_bloc/counter_event.dart';
-import 'package:intro_to_bloc/counter_bloc/counter_manager.dart';
-import 'package:intro_to_bloc/counter_bloc/counter_state.dart';
-import 'package:intro_to_bloc/model/product_model.dart';
-import 'package:intro_to_bloc/provider/favo_provider.dart';
-import 'package:intro_to_bloc/view/provider_example.dart';
-import 'package:provider/provider.dart';
+import 'package:intro_to_bloc/bloc/auth_bloc.dart';
+import 'package:intro_to_bloc/model/user_model.dart';
 
 void main() {
-  Bloc.observer = MyBlocObserver();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -20,110 +12,89 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => FavoProvider(),
-      child: const MaterialApp(
-        home: CatPage(),
-      ),
+    return MaterialApp(
+      home: MyWidget(),
     );
   }
 }
 
-class CounterPage extends StatelessWidget {
-  const CounterPage({super.key});
+class MyWidget extends StatelessWidget {
+  MyWidget({super.key});
+  TextEditingController email = TextEditingController();
+
+  TextEditingController firstName = TextEditingController();
+
+  TextEditingController lastName = TextEditingController();
+
+  TextEditingController password = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => CounterManager(),
-      child: Builder(builder: (context) {
-        return Scaffold(
-          body: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () {
-                    context.read<CounterManager>().add(Increament());
-                  },
-                ),
-                BlocBuilder<CounterManager, CounterState>(
-                  builder: (context, state) {
-                    if (state is AddToTheCounter) {
-                      return Text(state.counter.toString());
-                    } else if (state is SubTheCounter) {
-                      return Text(state.counter.toString());
-                    } else if (state is TheCounterIsNegative) {
-                      return Text('Please Dont Push The Sub Button Again');
-                    } else {
-                      return CircularProgressIndicator();
-                    }
-                  },
-                ),
-                IconButton(
-                  icon: Icon(Icons.minimize),
-                  onPressed: () {
-                    context.read<CounterManager>().add(Decreamnet());
-                  },
-                ),
-                IconButton(
+      create: (context) => AuthBloc(),
+      child: Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              TextField(
+                controller: email,
+              ),
+              TextField(
+                controller: firstName,
+              ),
+              TextField(
+                controller: lastName,
+              ),
+              TextField(
+                controller: password,
+              ),
+              BlocBuilder<AuthBloc, AuthState>(
+                builder: (context, state) {
+                  if (state is SuccessInSignUp) {
+                    return Container(
+                      width: 100,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Center(
+                        child: Icon(Icons.verified),
+                      ),
+                    );
+                  }
+                  if (state is ExceptioInSignUp) {
+                    return Text("No <:");
+                  }
+                  return ElevatedButton(
                     onPressed: () {
-                      context.read<CounterManager>().add(RestoreToZero());
+                      context.read<AuthBloc>().add(
+                            SignUp(
+                              user: UserModel(
+                                  firstName: firstName.text,
+                                  lastName: lastName.text,
+                                  password: password.text,
+                                  email: email.text,
+                                  role: "USER"),
+                            ),
+                          );
                     },
-                    icon: Icon(Icons.exposure_zero))
-              ],
-            ),
+                    child: Text("data"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      maximumSize: Size(400, 200),
+                      // textStyle: ,
+                      foregroundColor: Colors.yellow,
+                      surfaceTintColor: Colors.blue,
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
-        );
-      }),
-    );
-  }
-}
-
-class CatPage extends StatelessWidget {
-  const CatPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => CatApiBloc()..add(GetDataOfCat()),
-      child: Builder(builder: (context) {
-        return Scaffold(
-          appBar: AppBar(
-            title: TextField(
-              onChanged: (value) {
-                context.read<CatApiBloc>().add(SearchInCat(lexem: value));
-              },
-            ),
-          ),
-          body: BlocBuilder<CatApiBloc, CatApiState>(
-            builder: (context, state) {
-              if (state is SuccessToGetCat) {
-                return ListView.builder(
-                  itemCount: state.cats.length,
-                  itemBuilder: (context, index) => ListTile(
-                    title: Text(state.cats[index].name),
-                    leading: Image.network(state.cats[index].image),
-                  ),
-                );
-              } else if (state is FaildedToFetchCat) {
-                return Text("Sorry");
-              } else if (state is SearchResult) {
-                return ListView.builder(
-                  itemCount: state.cats.length,
-                  itemBuilder: (context, index) => ListTile(
-                    title: Text(state.cats[index].name),
-                    leading: Image.network(state.cats[index].image),
-                  ),
-                );
-              } else {
-                return CircularProgressIndicator();
-              }
-            },
-          ),
-        );
-      }),
+        ),
+      ),
     );
   }
 }
