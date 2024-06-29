@@ -20,8 +20,8 @@ class _AnimatedListExampleState extends State<AnimatedListExample> {
 
   buildItems(List<String> names, List<String> jops) {
     for (var i = 0; i < names.length; i++) {
-      future = future.then((_)async {
-     await   Future.delayed(
+      future = future.then((_) async {
+        await Future.delayed(
           Duration(milliseconds: 300),
           () {
             items.add(buildListTile(names[i], jops[i]));
@@ -42,7 +42,7 @@ class _AnimatedListExampleState extends State<AnimatedListExample> {
   @override
   void initState() {
     // WidgetsBinding.instance.addPostFrameCallback((_) {
-      buildItems(names, jops);
+    buildItems(names, jops);
     // });
   }
 
