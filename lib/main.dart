@@ -25,21 +25,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: BlocProvider(
-        create: (_) => ArticlesBloc(
-          GetAllArticelsUseCase(
-            articleRepo: ArticleRepoImpl(
-              remoteArticleDataSource: RemoteArticleDataSource(
-                dio: Dio(),
-              ),
-              localArticleDataSource: LocalArticleDataSource(
-                sharedPreferences: sharedPreferences,
-              ),
-              networkConnection: NetworkConnection(
-                internetConnectionChecker: InternetConnectionChecker(),
-              ),
+        create: (_) => ArticlesBloc(GetAllArticelsUseCase(
+          articleRepo: ArticleRepoImpl(
+            remoteArticleDataSource: RemoteArticleDataSource(dio: Dio()),
+            localArticleDataSource:
+                LocalArticleDataSource(sharedPreferences: sharedPreferences),
+            networkConnection: NetworkConnection(
+              internetConnectionChecker: InternetConnectionChecker(),
             ),
           ),
-        )..add(
+        ))
+          ..add(
             GetAllArticles(),
           ),
         child: const NewsView(),
