@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "118012302682",
+    "project_id": "the-closure-704fe",
+    "storage_bucket": "the-closure-704fe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:118012302682:android:c469873b6256b02c5b8f63",
+        "android_client_info": {
+          "package_name": "com.hello.my"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDinnJHCNW4IuoKNa4zQjXkiVALStUNkNA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
