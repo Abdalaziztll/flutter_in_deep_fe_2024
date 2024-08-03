@@ -1,0 +1,1 @@
+class PasswordMustContainOneUppercase implements Exception {}
